@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:   
+    - name: install jdk
+      apt:
+        name: default-jdk
+        state: latest
+    - name: create directory for jar file
+      file:
+        path: /opt/java
+        state: directory
+        mode: 0777
+    - name: copy jar file 
+      copy:
+        src: "{{ item }}"
+        dest: /etc/fooapp/
+        owner: root
+        mode: 600
+      with_fileglob:
+        - /home/ec2-user/.jenkins/workspace/dv-pipeline-2/target/*
+        
